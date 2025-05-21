@@ -14,12 +14,19 @@
 	"compatibility_flags": ["nodejs_als"],
 	"observability": {
 		"enabled": true
-	}
+	},
+
+	"routes": [
+		{
+			"pattern": "buttons.sylviethedev.com",
+			"custom_domain": true
+		}
+	],
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 	 */
-	// "placement": { "mode": "smart" },
+	"placement": { "mode": "smart" }
 
 	/**
 	 * Bindings
