@@ -40,3 +40,48 @@ export interface ProductListResponse {
 		total_pages: number;
 	};
 }
+
+export interface EventStream {
+	event: string;
+	data: string;
+}
+
+export type ParticleEvent = {
+	data: {
+		deviceID: string;
+		container: string;
+		data: string;
+	};
+	ttl: number;
+	published_at: string;
+	coreid: string;
+};
+
+export type ParticleActionEvent = {
+	data: {
+		deviceID: string;
+		container: 'action';
+		data: string;
+	};
+	ttl: number;
+	published_at: string;
+	coreid: string;
+};
+
+export type ParticleStatusEvent = {
+	data: {
+		deviceID: string;
+		container: 'status';
+		data: string;
+	};
+	ttl: number;
+	published_at: string;
+	coreid: string;
+};
+
+export type RawParticleEvent = {
+	data: string;
+	ttl: number;
+	published_at: string;
+	coreid: string;
+};
