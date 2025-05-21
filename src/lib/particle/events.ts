@@ -66,31 +66,27 @@ export class Events {
 		};
 	}
 
-	// /**
-	//  * Emit (publish) a Particle event via your backend API.
-	//  * @param eventName The name of the event to publish
-	//  * @param data The data to send (object or string)
-	//  * @param options Optional: {private: boolean, ttl: number}
-	//  * @returns Promise resolving to the API response
-	//  */
-	// async emit(eventName: string, data: any, options?: { private?: boolean; ttl?: number }) {
-	// 	// The backend expects: name, data, ttl, private
-	// 	const payload: Record<string, any> = {
-	// 		eventName,
-	// 		data
-	// 	};
-	// 	if (options?.private !== undefined) payload.private = options.private;
-	// 	if (options?.ttl !== undefined) payload.ttl = options.ttl;
-	// 	const res = await fetch('/api/particle-events', {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			'Content-Type': 'application/json'
-	// 		},
-	// 		body: JSON.stringify(payload)
-	// 	});
-	// 	if (!res.ok) {
-	// 		throw new Error(`Failed to emit event: ${res.status} ${res.statusText}`);
-	// 	}
-	// 	return res.json();
-	// }
+	async emit(eventName: string, data: unknown): Promise<unknown> {
+		const payload = {
+			eventName,
+			data,
+			private: true,
+			ttl: 60
+		};
+
+		const res = await fetch('/api/particle-events', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(`Failed to emit event: ${res.status} ${res.statusText} — ${text}`);
+		}
+
+		return res.json();
+	}
 }
