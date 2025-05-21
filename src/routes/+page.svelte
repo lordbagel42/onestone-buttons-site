@@ -125,8 +125,8 @@
 						</div>
 					{/if} -->
 
-					<div class="flex items-start gap-4">
-						<div class="flex-1">
+					<div class="flex items-center gap-4">
+						<div class="flex flex-1 flex-col items-center">
 							<p class="text-sm">
 								<span class="font-medium">Status:</span>
 								<span class={device.status === 'online' ? 'text-green-600' : 'text-red-600'}>
@@ -135,10 +135,10 @@
 							</p>
 							{#if eventsForDevice(device.id).length > 0}
 								<div class="mt-2 space-y-1">
-									<h3 class="text-sm font-semibold">Current State:</h3>
+									<h3 class="text-center text-sm font-semibold">Current State:</h3>
 									<ul class="space-y-1">
 										{#if lastEvent}
-											<li class="rounded-md p-2 text-xs font-bold">
+											<li class="rounded-md p-2 text-center text-xs font-bold">
 												<code>{lastEvent.data.data === 'HIGH' ? 'Pressed' : 'Released'}</code>
 											</li>
 										{/if}
@@ -146,24 +146,22 @@
 								</div>
 							{:else}
 								<div class="mt-2 space-y-1">
-									<h3 class="text-sm font-semibold">Current State:</h3>
+									<h3 class="text-center text-sm font-semibold">Current State:</h3>
 									<ul class="space-y-1">
-										<li class="rounded-md p-2 text-xs font-bold">
+										<li class="rounded-md p-2 text-center text-xs font-bold">
 											<code>Released</code>
 										</li>
 									</ul>
 								</div>
 							{/if}
 							<Button
-								class="mt-2"
+								class="my-4"
 								variant="outline"
 								onclick={() => {
 									setLightColor(device.id, device.RGBA);
 									console.log(device);
 								}}>Send Color</Button
 							>
-						</div>
-						<div>
 							<ColorPicker bind:rgb={device.RGBA} isDialog={false} />
 						</div>
 					</div>
