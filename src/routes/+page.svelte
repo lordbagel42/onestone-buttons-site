@@ -3,11 +3,12 @@
 	import type { ParticleActionEvent, ParticleStatusEvent } from '$lib/particle/particle.types';
 	import { onMount } from 'svelte';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
-	import { Button } from '$lib/components/ui/button';
+	import ColorPicker from 'svelte-awesome-color-picker';
 
 	let isHigh: boolean = $state(false);
 
 	let productId: string = $state('buttons-37734');
+	// i don't care to type that correctly.
 	let deviceList: any = $state();
 	let events: (ParticleActionEvent | ParticleStatusEvent)[] = $state([]);
 
@@ -33,21 +34,6 @@
 		});
 	});
 
-	// onMount(() => {
-	// 	deviceList = { devices: [{ id: 'test123', name: 'Test Device', status: 'online' }] };
-	// 	events = [
-	// 		{
-	// 			data: { deviceID: 'test123', container: 'action', data: 'HIGH' },
-	// 			ttl: 60,
-	// 			published_at: new Date().toISOString(),
-	// 			coreid: 'test123'
-	// 		}
-	// 	];
-
-	// 	console.log('Device list:', deviceList);
-	// 	console.log('Events:', events);
-	// });
-
 	const eventsForDevice = (deviceID: string) => {
 		console.log('Events for device:', deviceID);
 		return events.filter((event) => event?.data?.deviceID === deviceID);
@@ -68,6 +54,20 @@
 			data: 'LOW'
 		});
 	};
+
+	type RGBA = {
+		r: number;
+		g: number;
+		b: number;
+		a: number;
+	};
+
+	let RGBA = $state({
+		r: 0,
+		g: 0,
+		b: 0,
+		a: 1
+	});
 </script>
 
 {#if deviceList && deviceList.devices.length > 0}
@@ -91,7 +91,7 @@
 					<p class="text-sm text-gray-500">ID: {device.id}</p>
 				</CardHeader>
 				<CardContent class="space-y-2">
-					<p class="text-sm">
+					<!-- <p class="text-sm">
 						<span class="font-medium">Status:</span>
 						<span class={device.status === 'online' ? 'text-green-600' : 'text-red-600'}>
 							{device.status}
@@ -118,7 +118,42 @@
 								</li>
 							</ul>
 						</div>
-					{/if}
+					{/if} -->
+
+					<div class="flex items-start gap-4">
+						<div class="flex-1">
+							<p class="text-sm">
+								<span class="font-medium">Status:</span>
+								<span class={device.status === 'online' ? 'text-green-600' : 'text-red-600'}>
+									{device.status}
+								</span>
+							</p>
+							{#if eventsForDevice(device.id).length > 0}
+								<div class="mt-2 space-y-1">
+									<h3 class="text-sm font-semibold">Current State:</h3>
+									<ul class="space-y-1">
+										{#if lastEvent}
+											<li class="rounded-md p-2 text-xs font-bold">
+												<code>{lastEvent.data.data === 'HIGH' ? 'Pressed' : 'Released'}</code>
+											</li>
+										{/if}
+									</ul>
+								</div>
+							{:else}
+								<div class="mt-2 space-y-1">
+									<h3 class="text-sm font-semibold">Current State:</h3>
+									<ul class="space-y-1">
+										<li class="rounded-md p-2 text-xs font-bold">
+											<code>Released</code>
+										</li>
+									</ul>
+								</div>
+							{/if}
+						</div>
+						<div>
+							<ColorPicker bind:rgb={RGBA} isDialog={false} />
+						</div>
+					</div>
 				</CardContent>
 			</Card>
 		{/each}
