@@ -26,3 +26,8 @@ vite.config.ts.timestamp-*
 *.db
 
 .dev.vars*
+
+*storybook.log
+
+# Sentry Config File
+.env.sentry-build-plugin
