@@ -1,15 +1,23 @@
 <script lang="ts">
 	import { Events } from '$lib/particle/events';
-	import type { ParticleActionEvent, ParticleStatusEvent } from '$lib/particle/particle.types';
+	import type {
+		ParticleActionEvent,
+		ParticleDevice,
+		ParticleStatusEvent
+	} from '$lib/particle/particle.types';
 	import { onMount } from 'svelte';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import { Button } from '$lib/components/ui/button';
+	import { Product, setLightColor } from '$lib/particle/product';
 
 	let isHigh: boolean = $state(false);
 
 	let productId: string = $state('buttons-37734');
 	// i don't care to type that correctly.
-	let deviceList: any = $state();
+	let deviceList: any = $state({
+		devices: []
+	});
 	let events: (ParticleActionEvent | ParticleStatusEvent)[] = $state([]);
 
 	const particleEvents = new Events();
@@ -19,6 +27,17 @@
 			.then((response) => response.json())
 			.then((data) => {
 				deviceList = data;
+				deviceList.devices = deviceList.devices.map((device: any) => {
+					return {
+						...device,
+						RGBA: {
+							r: 255,
+							g: 255,
+							b: 255,
+							a: 1
+						}
+					};
+				});
 				console.log('Device list:', deviceList);
 			})
 			.catch((error) => {
@@ -54,20 +73,6 @@
 			data: 'LOW'
 		});
 	};
-
-	type RGBA = {
-		r: number;
-		g: number;
-		b: number;
-		a: number;
-	};
-
-	let RGBA = $state({
-		r: 0,
-		g: 0,
-		b: 0,
-		a: 1
-	});
 </script>
 
 {#if deviceList && deviceList.devices.length > 0}
@@ -149,9 +154,17 @@
 									</ul>
 								</div>
 							{/if}
+							<Button
+								class="mt-2"
+								variant="outline"
+								onclick={() => {
+									setLightColor(device.id, device.RGBA);
+									console.log(device);
+								}}>Send Color</Button
+							>
 						</div>
 						<div>
-							<ColorPicker bind:rgb={RGBA} isDialog={false} />
+							<ColorPicker bind:rgb={device.RGBA} isDialog={false} />
 						</div>
 					</div>
 				</CardContent>

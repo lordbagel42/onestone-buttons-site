@@ -26,6 +26,7 @@ export interface ParticleDevice {
 	quarantined: boolean;
 	denied: boolean;
 	owner?: string;
+	RGBA?: RGBA;
 }
 
 export interface ParticleCustomer {
@@ -84,4 +85,11 @@ export type RawParticleEvent = {
 	ttl: number;
 	published_at: string;
 	coreid: string;
+};
+
+export type RGBA = {
+	r: number;
+	g: number;
+	b: number;
+	a: number;
 };
